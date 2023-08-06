@@ -3,9 +3,11 @@ import { config } from "./libs/env";
 
 config();
 
-const server = http.createServer((req, res) => {
-  res.end("Init Project");
-});
+const server = http.createServer(
+  (req: IncomingMessage, res: ServerResponse) => {
+    res.end("Init Project");
+  }
+);
 
 const host = "localhost";
 const port = process.env.PORT;
