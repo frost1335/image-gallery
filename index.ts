@@ -1,8 +1,10 @@
 import http, { IncomingMessage, ServerResponse } from "http";
 
-const server = http.createServer((req, res) => {
-  res.end("Init Project");
-});
+const server = http.createServer(
+  (req: IncomingMessage, res: ServerResponse) => {
+    res.end("Init Project");
+  }
+);
 
 const host = "jamoliddin";
 const port = 3000;
