@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 
+// this is schema for images
 const imageSchema = new Schema({
   title: {
     type: String,
@@ -34,4 +35,5 @@ const imageSchema = new Schema({
 
 const Image = model("Image", imageSchema);
 
+// import Image model in order to use it
 export default Image;
