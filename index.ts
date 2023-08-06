@@ -1,5 +1,10 @@
 import http, { IncomingMessage, ServerResponse } from "http";
 
+const uri =
+  "mongodb+srv://Dilrozbek:12345678as@myatlasclusteredu.auh1a9y.mongodb.net/gallery-dev";
+
+require("./db/mongodb")(uri);
+
 const server = http.createServer(
   (req: IncomingMessage, res: ServerResponse) => {
     res.end("Init Project");
