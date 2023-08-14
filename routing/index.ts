@@ -1,7 +1,6 @@
-import { ServerResponse as any } from "http";
-import { IncomingMessage } from "http";
+import { ServerResponse, IncomingMessage } from "http";
 type route = {
-  [key: string]: (req: IncomingMessage, res: any) => any;
+  [key: string]: (req: IncomingMessage, res: ServerResponse) => any;
 };
 
 interface RoutingType {
@@ -9,18 +8,18 @@ interface RoutingType {
   postRoute: route;
   updateRoute: route;
   deleteRoute: route;
-  get: (url: string, callback: (req: IncomingMessage, res: any) => any) => void;
+  get: (url: string, callback: (req: IncomingMessage, res: ServerResponse) => any) => void;
   post: (
     url: string,
-    callback: (req: IncomingMessage, res: any) => any
+    callback: (req: IncomingMessage, res: ServerResponse) => any
   ) => void;
   update: (
     url: string,
-    callback: (req: IncomingMessage, res: any) => any
+    callback: (req: IncomingMessage, res: ServerResponse) => any
   ) => void;
   delete: (
     url: string,
-    callback: (req: IncomingMessage, res: any) => any
+    callback: (req: IncomingMessage, res: ServerResponse) => any
   ) => void;
 }
 
@@ -32,9 +31,9 @@ class Routing implements RoutingType {
 
   use(routing: RoutingType) {
     const getRoute = this.getRoute;
-    const postRoute = this.getRoute;
-    const updateRoute = this.getRoute;
-    const deleteRoute = this.getRoute;
+    const postRoute = this.postRoute;
+    const updateRoute = this.updateRoute;
+    const deleteRoute = this.deleteRoute;
     this.getRoute = { ...getRoute, ...routing.getRoute };
     this.postRoute = { ...postRoute, ...routing.postRoute };
     this.updateRoute = { ...updateRoute, ...routing.updateRoute };
@@ -56,6 +55,7 @@ class Routing implements RoutingType {
   delete(url: string, callback: (req: IncomingMessage, res: any) => any) {
     this.deleteRoute[url] = callback;
   }
+
   [key: string]: any;
 }
 
