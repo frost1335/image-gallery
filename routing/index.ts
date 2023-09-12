@@ -1,14 +1,13 @@
 import { ServerResponse, IncomingMessage } from "http";
-type route = {
+type Route = {
   [key: string]: (req: IncomingMessage, res: ServerResponse) => any;
 };
 
 interface RoutingType {
-  getRoute: route;
-  postRoute: route;
-  updateRoute: route;
-  deleteRoute: route;
-  get: (url: string, callback: (req: IncomingMessage, res: ServerResponse) => any) => void;
+  get: (
+    url: string,
+    callback: (req: IncomingMessage, res: ServerResponse) => any
+  ) => void;
   post: (
     url: string,
     callback: (req: IncomingMessage, res: ServerResponse) => any
@@ -21,13 +20,15 @@ interface RoutingType {
     url: string,
     callback: (req: IncomingMessage, res: ServerResponse) => any
   ) => void;
+  launch: (req: IncomingMessage, res: ServerResponse) => void;
+  [key: string]: any;
 }
 
 class Routing implements RoutingType {
-  postRoute: route = {};
-  getRoute: route = {};
-  updateRoute: route = {};
-  deleteRoute: route = {};
+  protected postRoute: Route = {};
+  protected getRoute: Route = {};
+  protected updateRoute: Route = {};
+  protected deleteRoute: Route = {};
 
   use(routing: RoutingType) {
     const getRoute = this.getRoute;
@@ -43,7 +44,7 @@ class Routing implements RoutingType {
   get(url: string, callback: (req: IncomingMessage, res: any) => any) {
     this.getRoute[url] = callback;
   }
-  
+
   post(url: string, callback: (req: IncomingMessage, res: any) => any) {
     this.postRoute[url] = callback;
   }
@@ -54,6 +55,27 @@ class Routing implements RoutingType {
 
   delete(url: string, callback: (req: IncomingMessage, res: any) => any) {
     this.deleteRoute[url] = callback;
+  }
+
+  launch(req: IncomingMessage, res: ServerResponse) {
+    const routing: { [key: string]: Route } = {
+      get: this.getRoute,
+      post: this.postRoute,
+      update: this.updateRoute,
+      delete: this.deleteRoute,
+    };
+    if (req.method !== undefined && req.url !== undefined) {
+      const func = routing[req.method.toLowerCase()]?.[req.url || "/"];
+      if (typeof func === "function") {
+        func(req, res);
+      } else {
+        res.statusCode = 404;
+        res.end("404 route is not found.");
+      }
+    } else {
+      res.statusCode = 500;
+      res.end("Iternal Server error.");
+    }
   }
 
   [key: string]: any;
