@@ -8,6 +8,7 @@ routing.get("/", (req: IncomingMessage, res: ServerResponse) => {
 });
 
 routing.get("/men/boburman", (req: IncomingMessage, res: ServerResponse) => {
+  res.setHeader("Content-type", "application/json");
   res.end(JSON.stringify({men: "Boburman"}));
 });
 

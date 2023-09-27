@@ -9,8 +9,8 @@ routing.use(home);
 
 const server = http.createServer(
   (req: IncomingMessage, res: ServerResponse) => {
-    const isAllowed = cors.enable({ req, res, origin: ["http://127.0.0.1:5500"] });
-    if(!isAllowed) return res.end()
+    const check = cors.enable({ req, res, origin: ["http://127.0.0.1:5500"] });
+    if(!check) return res.end()
     routing.launch(req, res);
   }
 );

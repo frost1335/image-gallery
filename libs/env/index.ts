@@ -7,22 +7,21 @@ export function checkFile(path: PathLike) {
 }
 
 export function parse(file: string = ".env"): { [key: string]: string } {
-  const filePath = resolve(__dirname, "..", "..", "..", file);
+  const filePath = resolve(process.cwd(), ".env");
+
   if (!checkFile(filePath)) {
     console.log(".env file doesn't exist.");
     return {};
   }
   const env: string = readFileSync(filePath, { encoding: "utf-8" });
 
-  const regex = /([^=\s]+)=(?:"([^"]*)"|'([^']*)'|([^'"\s]+))/g;
-  const matches = env.matchAll(regex);
   const parsed: { [key: string]: string } = {};
 
-  for (const match of matches) {
-    const key = match[1];
-    const value = match[2] || match[3] || match[4];
-    parsed[key] = value;
-  }
+  env.split("\n").forEach((variable) => {
+    const [key, value] = variable.split("=");
+    parsed[key.toUpperCase()] = value;
+  });
+
   return parsed;
 }
 

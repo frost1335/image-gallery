@@ -10,22 +10,14 @@ class Cors {
     if (origin === "*") {
       res.setHeader("Access-Control-Allow-Origin", origin);
     } else {
-      const thisOrigin = req.headers.origin;
-      if (!thisOrigin) {
-        res.statusCode = 400;
-        res.end();
-        return false;
-      }
-      if (origin.includes(thisOrigin)) {
-        res.setHeader("Access-Control-Allow-Origin", thisOrigin);
-      } else {
-        res.statusCode = 403;
-        res.end();
-        return false;
+      const reqOrigin = req.headers.origin;
+      if (!reqOrigin) return false;
+      if (origin.includes(reqOrigin)) {
+        res.setHeader("Access-Control-Allow-Origin", reqOrigin);
       }
     }
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    return true
+    return true;
   }
 }
 
